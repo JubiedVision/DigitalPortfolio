@@ -80,6 +80,7 @@ export default function Header() {
   const handleNavClick = (e: React.MouseEvent<HTMLAnchorElement>) => {
     e.preventDefault();
     const href = e.currentTarget.getAttribute("href");
+    
     if (href && href.startsWith("#")) {
       const targetId = href.substring(1);
       const element = document.getElementById(targetId);
@@ -96,6 +97,13 @@ export default function Header() {
         if (isOpen) {
           setIsOpen(false);
         }
+      }
+    } else if (href) {
+      // Navigate to page routes
+      window.location.href = href;
+      
+      if (isOpen) {
+        setIsOpen(false);
       }
     }
   };
@@ -165,6 +173,12 @@ export default function Header() {
                   )}
                   {item.label}
                 </motion.a>
+              ) : item.isPage ? (
+                <Link key={item.href} href={item.href}>
+                  <a className="font-medium hover:text-primary transition-colors">
+                    {item.label}
+                  </a>
+                </Link>
               ) : (
                 <a
                   key={item.href}
@@ -260,12 +274,18 @@ export default function Header() {
                       )}
                       {item.label}
                     </motion.a>
+                  ) : item.isPage ? (
+                    <Link key={item.href} href={item.href}>
+                      <a className="font-medium hover:text-primary transition-colors">
+                        {item.label}
+                      </a>
+                    </Link>
                   ) : (
                     <a
                       key={item.href}
                       href={item.href}
                       onClick={handleNavClick}
-                      className="font-medium py-2 hover:text-primary transition-colors"
+                      className="font-medium hover:text-primary transition-colors"
                     >
                       {item.label}
                     </a>
