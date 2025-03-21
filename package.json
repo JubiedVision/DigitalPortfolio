@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "tsx server/index.ts",
     "build": "vite build",
-    "build:netlify": "vite build && (copy _redirects dist\\public\\ || echo \"_redirects copied or already exists\")",
+    "build:netlify": "vite build && (copy _redirects dist\\public\\ || echo \"_redirects copied or already exists\") && echo \"/* /index.html 200\" > dist/public/_redirects",
     "start": "vite preview",
     "check": "tsc",
     "db:push": "drizzle-kit push"

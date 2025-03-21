@@ -1,7 +1,7 @@
 // netlify/functions/api.js
-const express = require('express');
-const serverless = require('serverless-http');
-const cors = require('cors');
+import express from 'express';
+import serverless from 'serverless-http';
+import cors from 'cors';
 
 // Create express instance
 const app = express();
@@ -19,4 +19,4 @@ app.get('/api/health', (req, res) => {
 // Add your other API routes here...
 
 // Export the serverless function
-module.exports.handler = serverless(app); 
+export const handler = serverless(app); 
