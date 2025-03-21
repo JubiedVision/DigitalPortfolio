@@ -44,13 +44,15 @@ export default function ContactSection() {
   const onSubmit = async (data: ContactFormValues) => {
     setIsSubmitting(true);
     try {
-      await apiRequest("POST", "/api/contact", data);
+      const baseUrl = window.location.origin;
+      await apiRequest("POST", `${baseUrl}/api/contact`, data);
       toast({
         title: "Message sent!",
         description: "Thank you for your message. We'll get back to you soon.",
       });
       reset();
     } catch (error) {
+      console.error("Form submission error:", error);
       toast({
         title: "Error",
         description: "There was a problem sending your message. Please try again.",
