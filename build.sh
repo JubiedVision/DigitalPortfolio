@@ -7,7 +7,7 @@ rm -rf dist
 npm run build
 
 # Create necessary Netlify files if they don't exist
-mkdir -p dist/public
+# No need to create dist/public manually since vite already does that
 [ -f dist/public/_redirects ] || echo "/* /index.html 200" > dist/public/_redirects
 
 echo "Build completed successfully!" 
