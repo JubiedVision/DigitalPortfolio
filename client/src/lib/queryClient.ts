@@ -1,5 +1,25 @@
 import { QueryClient, QueryFunction } from "@tanstack/react-query";
 
+// Helper function to ensure API paths work both locally and in production
+function getApiUrl(path: string): string {
+  // If the path already starts with http or https, return it as is
+  if (path.startsWith('http')) return path;
+  
+  // If the path already includes .netlify/functions, return it as is
+  if (path.includes('.netlify/functions')) return path;
+  
+  // If the path starts with /api, replace it with the Netlify function path in production
+  if (path.startsWith('/api')) {
+    // In development, use the path as is, otherwise use Netlify function path
+    return import.meta.env.DEV 
+      ? path 
+      : path.replace('/api', '/.netlify/functions/api');
+  }
+  
+  // Return the path as is for other cases
+  return path;
+}
+
 async function throwIfResNotOk(res: Response) {
   if (!res.ok) {
     let errorMessage;
@@ -19,7 +39,8 @@ export async function apiRequest(
   data?: unknown | undefined,
 ): Promise<Response> {
   try {
-    const res = await fetch(url, {
+    const apiUrl = getApiUrl(url);
+    const res = await fetch(apiUrl, {
       method,
       headers: data ? { "Content-Type": "application/json" } : {},
       body: data ? JSON.stringify(data) : undefined,
@@ -40,7 +61,8 @@ export const getQueryFn: <T>(options: {
 }) => QueryFunction<T> =
   ({ on401: unauthorizedBehavior }) =>
   async ({ queryKey }) => {
-    const res = await fetch(queryKey[0] as string, {
+    const apiUrl = getApiUrl(queryKey[0] as string);
+    const res = await fetch(apiUrl, {
       credentials: "include",
     });
 

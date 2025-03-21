@@ -1,12 +1,18 @@
 [build]
-  command = "npm run build"
+  command = "npm run build:netlify"
   publish = "dist/public/"
+  functions = "netlify/functions"
 
 [build.environment]
   NODE_VERSION = "18"
 
 # Supabase environment variables will be set in the Netlify dashboard
 # Don't include actual keys in this file
+
+[[redirects]]
+  from = "/api/*"
+  to = "/.netlify/functions/api/:splat"
+  status = 200
 
 [[redirects]]
   from = "/*"
