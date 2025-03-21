@@ -1,12 +1,40 @@
 import { motion } from "framer-motion";
 import { useInView } from "react-intersection-observer";
 import { services } from "@/lib/services";
+import { 
+  FaSearchengin, 
+  FaPaintBrush, 
+  FaSitemap, 
+  FaLayerGroup, 
+  FaFingerprint,
+  FaMobileAlt 
+} from "react-icons/fa";
 
 export default function ServicesSection() {
   const { ref: sectionRef, inView: sectionInView } = useInView({
     triggerOnce: true,
     threshold: 0.1,
   });
+
+  // Map of icon components by name
+  const iconComponents = {
+    FaSearchengin,
+    FaPaintBrush,
+    FaSitemap,
+    FaLayerGroup,
+    FaFingerprint,
+    FaMobileAlt
+  };
+
+  // Gradient background classes for each service
+  const gradientClasses = [
+    "bg-gradient-to-tr from-blue-500 to-indigo-600",
+    "bg-gradient-to-tr from-purple-500 to-pink-600",
+    "bg-gradient-to-tr from-green-500 to-teal-600",
+    "bg-gradient-to-tr from-yellow-500 to-orange-600",
+    "bg-gradient-to-tr from-red-500 to-rose-600",
+    "bg-gradient-to-tr from-cyan-500 to-blue-600",
+  ];
 
   const containerVariants = {
     hidden: { opacity: 0 },
@@ -45,50 +73,42 @@ export default function ServicesSection() {
           animate={sectionInView ? "show" : "hidden"}
           className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"
         >
-          {services.map((service) => (
-            <motion.div
-              key={service.id}
-              variants={itemVariants}
-              className="service-card bg-white rounded-2xl p-8 shadow-md hover:shadow-xl transition-all duration-300 hover:-translate-y-2"
-            >
-              <div className="w-14 h-14 bg-primary bg-opacity-10 rounded-xl flex items-center justify-center mb-6">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  className="h-6 w-6 text-primary"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d={service.icon}
-                  />
-                </svg>
-              </div>
-              <h3 className="text-xl font-bold mb-3">{service.title}</h3>
-              <p className="text-gray-600 mb-6">{service.description}</p>
-              <a
-                href="#"
-                className="text-primary font-medium flex items-center group"
+          {services.map((service, index) => {
+            // Get the icon component dynamically
+            const IconComponent = iconComponents[service.iconName as keyof typeof iconComponents];
+            
+            return (
+              <motion.div
+                key={service.id}
+                variants={itemVariants}
+                className="service-card bg-white rounded-2xl p-8 shadow-md hover:shadow-xl transition-all duration-300 hover:-translate-y-2"
               >
-                Learn more
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  className="h-5 w-5 ml-1 transform transition-transform duration-300 group-hover:translate-x-1"
-                  viewBox="0 0 20 20"
-                  fill="currentColor"
+                <div className={`w-16 h-16 ${gradientClasses[index]} rounded-2xl flex items-center justify-center mb-6 text-white shadow-lg`}>
+                  <IconComponent className="h-8 w-8" />
+                </div>
+                <h3 className="text-xl font-bold mb-3">{service.title}</h3>
+                <p className="text-gray-600 mb-6">{service.description}</p>
+                <a
+                  href="#"
+                  className="text-primary font-medium flex items-center group"
                 >
-                  <path
-                    fillRule="evenodd"
-                    d="M12.293 5.293a1 1 0 011.414 0l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-2.293-2.293a1 1 0 010-1.414z"
-                    clipRule="evenodd"
-                  />
-                </svg>
-              </a>
-            </motion.div>
-          ))}
+                  Learn more
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    className="h-5 w-5 ml-1 transform transition-transform duration-300 group-hover:translate-x-1"
+                    viewBox="0 0 20 20"
+                    fill="currentColor"
+                  >
+                    <path
+                      fillRule="evenodd"
+                      d="M12.293 5.293a1 1 0 011.414 0l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-2.293-2.293a1 1 0 010-1.414z"
+                      clipRule="evenodd"
+                    />
+                  </svg>
+                </a>
+              </motion.div>
+            );
+          })}
         </motion.div>
       </div>
     </section>
