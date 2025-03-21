@@ -32,7 +32,7 @@ export const testimonials: Testimonial[] = [
     name: "James Wilson",
     role: "Product Director",
     company: "InnovateTech",
-    quote: "The UX Centerd team brought incredible expertise and creativity to our project. They took the time to understand our business goals and user needs, resulting in a design that exceeded our expectations.",
+    quote: "The UX Centerd team brought incredible expertise and creativity to our project. They took the time to understand our business goals and user needs, resulting in a design that exceeded our expectations. Their attention to detail and commitment to quality was outstanding.",
     rating: 5,
     imageUrl: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&auto=format&fit=crop&w=256&q=80",
   }

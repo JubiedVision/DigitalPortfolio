@@ -11,15 +11,70 @@ const navItems = [
   { href: "#contact", label: "Contact" },
 ];
 
+// Animation variants for the contact button
+const buttonVariants = {
+  initial: { 
+    scale: 1,
+    boxShadow: "0 0 0 rgba(0, 120, 255, 0)"
+  },
+  hover: {
+    scale: 1.05,
+    boxShadow: "0 0 10px rgba(0, 120, 255, 0.5)",
+    transition: { 
+      scale: { duration: 0.2 },
+      boxShadow: { duration: 0.3 }
+    }
+  },
+  tap: { 
+    scale: 0.95,
+    boxShadow: "0 0 5px rgba(0, 120, 255, 0.3)",
+    transition: { duration: 0.1 }
+  }
+};
+
+const shineVariants = {
+  initial: { 
+    x: "-100%", 
+    opacity: 0 
+  },
+  hover: { 
+    x: "100%", 
+    opacity: 0.7,
+    transition: { 
+      duration: 0.6, 
+      ease: "easeInOut" 
+    }
+  }
+};
+
 export default function Header() {
   const [isOpen, setIsOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
   const isMobile = useIsMobile();
+  const [rippleEffect, setRippleEffect] = useState({ x: 0, y: 0, isAnimating: false });
 
   const toggleMenu = () => setIsOpen(!isOpen);
 
   const handleScroll = () => {
     setIsScrolled(window.scrollY > 10);
+  };
+
+  const handleContactClick = (e: React.MouseEvent<HTMLAnchorElement>) => {
+    // Handle normal navigation
+    handleNavClick(e);
+    
+    // Create ripple effect
+    const button = e.currentTarget;
+    const rect = button.getBoundingClientRect();
+    const x = e.clientX - rect.left;
+    const y = e.clientY - rect.top;
+    
+    setRippleEffect({ x, y, isAnimating: true });
+    
+    // Reset animation after it completes
+    setTimeout(() => {
+      setRippleEffect({ x: 0, y: 0, isAnimating: false });
+    }, 600);
   };
 
   const handleNavClick = (e: React.MouseEvent<HTMLAnchorElement>) => {
@@ -61,16 +116,65 @@ export default function Header() {
           </Link>
 
           {/* Desktop Navigation */}
-          <nav className="hidden md:flex space-x-10">
+          <nav className="hidden md:flex space-x-10 items-center">
             {navItems.map((item) => (
-              <a
-                key={item.href}
-                href={item.href}
-                onClick={handleNavClick}
-                className="font-medium hover:text-primary transition-colors"
-              >
-                {item.label}
-              </a>
+              item.label === "Contact" ? (
+                <motion.a
+                  key={item.href}
+                  href={item.href}
+                  onClick={handleContactClick}
+                  className="px-5 py-2.5 rounded-md bg-primary text-white font-medium relative overflow-hidden shadow-sm"
+                  variants={buttonVariants}
+                  initial="initial"
+                  whileHover="hover"
+                  whileTap="tap"
+                  animate={{
+                    boxShadow: ["0 0 0 rgba(0, 120, 255, 0)", "0 0 8px rgba(0, 120, 255, 0.3)", "0 0 0 rgba(0, 120, 255, 0)"],
+                  }}
+                  transition={{
+                    boxShadow: {
+                      repeat: Infinity,
+                      duration: 2,
+                      repeatType: "reverse"
+                    }
+                  }}
+                >
+                  <motion.span 
+                    className="absolute inset-0 bg-white/30"
+                    variants={shineVariants}
+                  />
+                  {rippleEffect.isAnimating && (
+                    <motion.span
+                      className="absolute bg-white/40 rounded-full"
+                      initial={{ 
+                        width: 0, 
+                        height: 0,
+                        opacity: 0.7,
+                        x: rippleEffect.x,
+                        y: rippleEffect.y,
+                        translateX: "-50%",
+                        translateY: "-50%"
+                      }}
+                      animate={{ 
+                        width: 300, 
+                        height: 300,
+                        opacity: 0
+                      }}
+                      transition={{ duration: 0.6 }}
+                    />
+                  )}
+                  {item.label}
+                </motion.a>
+              ) : (
+                <a
+                  key={item.href}
+                  href={item.href}
+                  onClick={handleNavClick}
+                  className="font-medium hover:text-primary transition-colors"
+                >
+                  {item.label}
+                </a>
+              )
             ))}
           </nav>
 
@@ -109,14 +213,63 @@ export default function Header() {
             >
               <div className="flex flex-col space-y-4">
                 {navItems.map((item) => (
-                  <a
-                    key={item.href}
-                    href={item.href}
-                    onClick={handleNavClick}
-                    className="font-medium py-2 hover:text-primary transition-colors"
-                  >
-                    {item.label}
-                  </a>
+                  item.label === "Contact" ? (
+                    <motion.a
+                      key={item.href}
+                      href={item.href}
+                      onClick={handleContactClick}
+                      className="font-medium py-2.5 px-5 bg-primary text-white rounded-md relative overflow-hidden w-fit shadow-sm"
+                      variants={buttonVariants}
+                      initial="initial"
+                      whileHover="hover"
+                      whileTap="tap"
+                      animate={{
+                        boxShadow: ["0 0 0 rgba(0, 120, 255, 0)", "0 0 8px rgba(0, 120, 255, 0.3)", "0 0 0 rgba(0, 120, 255, 0)"],
+                      }}
+                      transition={{
+                        boxShadow: {
+                          repeat: Infinity,
+                          duration: 2,
+                          repeatType: "reverse"
+                        }
+                      }}
+                    >
+                      <motion.span 
+                        className="absolute inset-0 bg-white/30"
+                        variants={shineVariants}
+                      />
+                      {rippleEffect.isAnimating && (
+                        <motion.span
+                          className="absolute bg-white/40 rounded-full"
+                          initial={{ 
+                            width: 0, 
+                            height: 0,
+                            opacity: 0.7,
+                            x: rippleEffect.x,
+                            y: rippleEffect.y,
+                            translateX: "-50%",
+                            translateY: "-50%"
+                          }}
+                          animate={{ 
+                            width: 300, 
+                            height: 300,
+                            opacity: 0
+                          }}
+                          transition={{ duration: 0.6 }}
+                        />
+                      )}
+                      {item.label}
+                    </motion.a>
+                  ) : (
+                    <a
+                      key={item.href}
+                      href={item.href}
+                      onClick={handleNavClick}
+                      className="font-medium py-2 hover:text-primary transition-colors"
+                    >
+                      {item.label}
+                    </a>
+                  )
                 ))}
               </div>
             </motion.div>
