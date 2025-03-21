@@ -5,7 +5,6 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useToast } from "@/hooks/use-toast";
-import { submitContactForm } from "@/lib/supabase";
 
 const contactSchema = z.object({
   name: z.string().min(2, "Name must be at least 2 characters"),
@@ -16,6 +15,32 @@ const contactSchema = z.object({
 });
 
 type ContactFormValues = z.infer<typeof contactSchema>;
+
+// Function to handle form submission (placeholder)
+async function handleFormSubmission(formData: ContactFormValues) {
+  // For now, just log the data and return a resolved promise
+  console.log('Form data submitted:', formData);
+  
+  // In a real application, you would send this data to your backend
+  // For example using fetch:
+  // 
+  // const response = await fetch('/api/contact', {
+  //   method: 'POST',
+  //   headers: {
+  //     'Content-Type': 'application/json',
+  //   },
+  //   body: JSON.stringify(formData),
+  // });
+  // 
+  // if (!response.ok) {
+  //   throw new Error('Failed to submit form');
+  // }
+  // 
+  // return await response.json();
+  
+  // For demo, return a resolved promise after a delay
+  return new Promise(resolve => setTimeout(resolve, 500));
+}
 
 export default function ContactSection() {
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -44,7 +69,7 @@ export default function ContactSection() {
   const onSubmit = async (data: ContactFormValues) => {
     setIsSubmitting(true);
     try {
-      await submitContactForm(data);
+      await handleFormSubmission(data);
       toast({
         title: "Message sent!",
         description: "Thank you for your message. We'll get back to you soon.",

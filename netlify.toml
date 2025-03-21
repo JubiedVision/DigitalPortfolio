@@ -6,9 +6,6 @@
 [build.environment]
   NODE_VERSION = "18"
 
-# Supabase environment variables will be set in the Netlify dashboard
-# Don't include actual keys in this file
-
 [[redirects]]
   from = "/api/*"
   to = "/.netlify/functions/api/:splat"
