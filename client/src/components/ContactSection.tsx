@@ -16,14 +16,43 @@ const contactSchema = z.object({
 
 type ContactFormValues = z.infer<typeof contactSchema>;
 
-// Function to handle form submission (placeholder)
+// Function to handle form submission
 async function handleFormSubmission(formData: ContactFormValues) {
-  // With Netlify Forms, we don't need to manually handle the submission
-  // as Netlify will intercept the form submission and handle it
-  console.log('Form data submitted:', formData);
+  // Encode form data for Netlify
+  const formDataToSend = new FormData();
   
-  // Return a resolved promise after a delay for toast notification
-  return new Promise(resolve => setTimeout(resolve, 500));
+  // Add form-name field which Netlify requires
+  formDataToSend.append("form-name", "contact");
+  
+  // Add all form fields
+  formDataToSend.append("name", formData.name);
+  formDataToSend.append("email", formData.email);
+  if (formData.company) formDataToSend.append("company", formData.company);
+  formDataToSend.append("project", formData.project);
+  
+  // Handle services array
+  if (formData.services && formData.services.length > 0) {
+    formData.services.forEach(service => {
+      formDataToSend.append("services[]", service);
+    });
+  }
+  
+  // Submit the form data to Netlify
+  try {
+    const response = await fetch("/", {
+      method: "POST",
+      body: formDataToSend,
+    });
+    
+    if (!response.ok) {
+      throw new Error(`Form submission failed: ${response.statusText}`);
+    }
+    
+    return response;
+  } catch (error) {
+    console.error("Error submitting to Netlify:", error);
+    throw error;
+  }
 }
 
 export default function ContactSection() {
@@ -99,6 +128,7 @@ export default function ContactSection() {
               method="POST"
               data-netlify="true"
               netlify-honeypot="bot-field"
+              action="/" 
               onSubmit={handleSubmit(onSubmit)} 
               className="space-y-6"
             >
