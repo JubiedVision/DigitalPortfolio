@@ -18,27 +18,11 @@ type ContactFormValues = z.infer<typeof contactSchema>;
 
 // Function to handle form submission (placeholder)
 async function handleFormSubmission(formData: ContactFormValues) {
-  // For now, just log the data and return a resolved promise
+  // With Netlify Forms, we don't need to manually handle the submission
+  // as Netlify will intercept the form submission and handle it
   console.log('Form data submitted:', formData);
   
-  // In a real application, you would send this data to your backend
-  // For example using fetch:
-  // 
-  // const response = await fetch('/api/contact', {
-  //   method: 'POST',
-  //   headers: {
-  //     'Content-Type': 'application/json',
-  //   },
-  //   body: JSON.stringify(formData),
-  // });
-  // 
-  // if (!response.ok) {
-  //   throw new Error('Failed to submit form');
-  // }
-  // 
-  // return await response.json();
-  
-  // For demo, return a resolved promise after a delay
+  // Return a resolved promise after a delay for toast notification
   return new Promise(resolve => setTimeout(resolve, 500));
 }
 
@@ -110,7 +94,22 @@ export default function ContactSection() {
             transition={{ duration: 0.5, delay: 0.2 }}
             className="bg-white rounded-2xl p-8 md:p-10 shadow-md"
           >
-            <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+            <form 
+              name="contact"
+              method="POST"
+              data-netlify="true"
+              netlify-honeypot="bot-field"
+              onSubmit={handleSubmit(onSubmit)} 
+              className="space-y-6"
+            >
+              {/* Netlify Form Detection */}
+              <input type="hidden" name="form-name" value="contact" />
+              
+              {/* Honeypot field to prevent spam */}
+              <div className="hidden">
+                <input name="bot-field" />
+              </div>
+
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>
                   <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-1">
@@ -119,6 +118,7 @@ export default function ContactSection() {
                   <input
                     type="text"
                     id="name"
+                    name="name"
                     {...register("name")}
                     placeholder="Your name"
                     className={`w-full px-4 py-3 rounded-lg border ${
@@ -137,6 +137,7 @@ export default function ContactSection() {
                   <input
                     type="email"
                     id="email"
+                    name="email"
                     {...register("email")}
                     placeholder="Your email"
                     className={`w-full px-4 py-3 rounded-lg border ${
@@ -156,6 +157,7 @@ export default function ContactSection() {
                 <input
                   type="text"
                   id="company"
+                  name="company"
                   {...register("company")}
                   placeholder="Your company"
                   className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
@@ -168,6 +170,7 @@ export default function ContactSection() {
                 </label>
                 <textarea
                   id="project"
+                  name="project"
                   {...register("project")}
                   rows={4}
                   placeholder="Tell us about your project"
@@ -188,6 +191,7 @@ export default function ContactSection() {
                   <label className="flex items-center">
                     <input
                       type="checkbox"
+                      name="services[]"
                       value="ux-research"
                       {...register("services")}
                       className="w-4 h-4 text-primary focus:ring-primary border-gray-300 rounded"
@@ -197,6 +201,7 @@ export default function ContactSection() {
                   <label className="flex items-center">
                     <input
                       type="checkbox"
+                      name="services[]"
                       value="ui-design"
                       {...register("services")}
                       className="w-4 h-4 text-primary focus:ring-primary border-gray-300 rounded"
@@ -206,6 +211,7 @@ export default function ContactSection() {
                   <label className="flex items-center">
                     <input
                       type="checkbox"
+                      name="services[]"
                       value="product-strategy"
                       {...register("services")}
                       className="w-4 h-4 text-primary focus:ring-primary border-gray-300 rounded"
@@ -215,6 +221,7 @@ export default function ContactSection() {
                   <label className="flex items-center">
                     <input
                       type="checkbox"
+                      name="services[]"
                       value="design-systems"
                       {...register("services")}
                       className="w-4 h-4 text-primary focus:ring-primary border-gray-300 rounded"

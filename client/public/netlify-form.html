@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Netlify Form</title>
+</head>
+<body>
+  <!-- This form is only for Netlify form detection, it will never be visible to users -->
+  <form name="contact" netlify netlify-honeypot="bot-field" hidden>
+    <input type="text" name="name" />
+    <input type="email" name="email" />
+    <input type="text" name="company" />
+    <textarea name="project"></textarea>
+    <input type="checkbox" name="services[]" value="ux-research" />
+    <input type="checkbox" name="services[]" value="ui-design" />
+    <input type="checkbox" name="services[]" value="product-strategy" />
+    <input type="checkbox" name="services[]" value="design-systems" />
+  </form>
+</body>
+</html> 
